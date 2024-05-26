@@ -64,6 +64,11 @@
                     <div class="col-lg-6 pt-5 mt-3">
                         <div class="text-center">
                             <h4>Wordcloud</h4>
+                            <img
+                                id="wordcloud"
+                                src="{{ url_for('static', filename='images/wordcloud.png') }}"
+                                alt=""
+                            />
                         </div>
                     </div>
                     <div class="col-lg-6 pt-5 mt-3">
@@ -71,7 +76,7 @@
                             <h4>Chart</h4>
                             <canvas
                                 id="sentimentChart"
-                                width="200"
+                                width="50"
                                 height="50"
                             ></canvas>
                         </div>

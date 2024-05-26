@@ -1,7 +1,15 @@
 import googleapiclient.discovery
 from config import get_secret_key
 import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib
+from wordcloud import WordCloud, STOPWORDS
+import nltk
+from nltk.corpus import stopwords
 import re
+
+# Ensure you have the necessary NLTK data files
+nltk.download("stopwords")
 
 
 class YoutubeCrawler:
@@ -122,6 +130,12 @@ class ResultProcessor:
             inplace=True,
         )
 
+        # Wordcloud
+        all_reviews_text = " ".join(df_process["Review"])
+
+        wordcloud_generator = WordCloudGenerator()
+        wordcloud_generator.generate_wordcloud(all_reviews_text)
+
         # Use Pandas to_html to convert DataFrame to HTML table
         table_classes = "table table-responsive table-striped text-center"
         html_output = df_process.to_html(
@@ -129,3 +143,56 @@ class ResultProcessor:
         )
 
         return html_output
+
+
+class WordCloudGenerator:
+    def __init__(self, custom_words=None):
+        self.custom_words = custom_words if custom_words else []
+
+    # Function to remove stopwords
+    def remove_stopwords(self, text, language="indonesian"):
+        stop_words = set(stopwords.words(language))
+        return " ".join(
+            [word for word in text.split() if word.lower() not in stop_words]
+        )
+
+    # Function to remove custom words from text
+    def remove_custom_words(self, text):
+        for word in self.custom_words:
+            text = text.replace(word, "")
+        return text
+
+    # Function to remove numbers and symbols from text
+    def remove_numbers_and_symbols(self, text):
+        text = re.sub(r"[^a-zA-Z\s]", "", text)
+        return text
+
+    def preprocess_text(self, text):
+        text = self.remove_stopwords(text)
+        text = self.remove_custom_words(text)
+        text = self.remove_numbers_and_symbols(text)
+        return text
+
+    def generate_wordcloud(self, text, save_path="./static/images/wordcloud.png"):
+        preprocessed_text = self.preprocess_text(text=text)
+
+        wordcloud = WordCloud(
+            width=800,
+            height=400,
+            background_color="white",
+            random_state=3,
+            max_font_size=110,
+            stopwords=STOPWORDS,
+        ).generate(preprocessed_text)
+
+        matplotlib.use("Agg")
+
+        # Display the generated WordCloud using matplotlib
+        plt.figure(figsize=(10, 7))
+        plt.imshow(wordcloud, interpolation="bilinear")
+        plt.axis("off")
+
+        # Save the generated WordCloud to a file
+        plt.savefig(save_path, bbox_inches="tight")
+
+        plt.close()

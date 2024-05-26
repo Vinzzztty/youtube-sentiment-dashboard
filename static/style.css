@@ -120,3 +120,11 @@ th {
 .table td {
     text-align: center; /* Optionally keep this if you want all cells centered */
 }
+
+#wordcloud {
+    width: 80%;
+}
+
+#sentimentChart {
+    width: 20%;
+}
