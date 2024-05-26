@@ -3,23 +3,23 @@ steps:
       args:
           - "build"
           - "-t"
-          - "us-central1-docker.pkg.dev/$PROJECT_ID/bjir-artifact/data-vis:$COMMIT_SHA"
+          - "asia-southeast2-docker.pkg.dev/$PROJECT_ID/sentube-artifact/data-vis:$COMMIT_SHA"
           - "."
     - name: gcr.io/cloud-builders/docker
       args:
           - "push"
-          - "us-central1-docker.pkg.dev/$PROJECT_ID/bjir-artifact/data-vis:$COMMIT_SHA"
+          - "asia-southeast2-docker.pkg.dev/$PROJECT_ID/sentube-artifact/data-vis:$COMMIT_SHA"
     - name: "gcr.io/cloud-builders/gcloud"
       entrypoint: gcloud
       args:
           - "run"
           - "deploy"
           - "model-vis"
-          - "--image=us-central1-docker.pkg.dev/$PROJECT_ID/bjir-artifact/data-vis:$COMMIT_SHA"
-          - "--region=us-central1"
+          - "--image=asia-southeast2-docker.pkg.dev/$PROJECT_ID/sentube-artifact/data-vis:$COMMIT_SHA"
+          - "--region=asia-southeast2"
           - "--cpu=1"
           - "--memory=2048Mi"
           - "--allow-unauthenticated"
 images:
-    - "us-central1-docker.pkg.dev/$PROJECT_ID/bjir-artifact/data-vis:$COMMIT_SHA"
-logsBucket: "gs://bjir-bucket/logs"
+    - "asia-southeast2-docker.pkg.dev/$PROJECT_ID/sentube-artifact/data-vis:$COMMIT_SHA"
+logsBucket: "gs://sentube-bucket/logs"
